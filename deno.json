@@ -1,0 +1,24 @@
+{
+  "tasks": {
+    "stop": "pm2 stop cineteca",
+    "start": "pm2 start --interpreter='deno' --interpreter-args='run --allow-net --allow-read --allow-env --allow-run --allow-write' --name cineteca index.ts && pm2 logs cineteca",
+    "logs": "pm2 logs cineteca",
+    "reload": "pm2 reload cineteca && pm2 logs cineteca",
+    "check": "deno check index.ts",
+    "run": "deno run --allow-net --allow-read --allow-env --allow-run --allow-write index.ts",
+    "watch": "deno run --watch --allow-net --allow-read --allow-env --allow-run --allow-write index.ts"
+  },
+  "imports": {
+    "axiod": "https://deno.land/x/axiod@0.26.2/mod.ts",
+    "cron": "https://deno.land/x/croner@6.0.4/dist/croner.js",
+    "deno-dom": "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts",
+    "dotenv": "https://deno.land/std@0.192.0/dotenv/load.ts",
+    "escapeHtml": "https://deno.land/x/escape_html@1.0.0/mod.ts",
+    "grammy/": "https://deno.land/x/grammy@v1.16.2/",
+    "joi": "https://esm.sh/joi@17.9.2",
+    "moment": "npm:moment@2.29.4",
+    "recognizers-text-date-time": "npm:@microsoft/recognizers-text-date-time@1.3.2",
+    "recognizers-text-suite": "npm:@microsoft/recognizers-text-suite@1.3.1",
+    "std/": "https://deno.land/std@0.200.0/"
+  }
+}
