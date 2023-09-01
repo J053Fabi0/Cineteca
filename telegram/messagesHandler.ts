@@ -3,6 +3,7 @@ import bot from "./initBot.ts";
 import { allUsers } from "../constants.ts";
 import nlToDate from "../utils/nlToDate.ts";
 import sendMovies from "../crons/sendMovies.ts";
+import getDateDescription from "../utils/getDateDescription.ts";
 
 const ejemplos = ["En dos días", "Este sábado", "El siguiente sábado", "Hoy"];
 
@@ -22,7 +23,11 @@ bot.on("message", (ctx) => {
 
   const date = nlToDate(text);
   if (!date) return incorrectText();
-  if (date.isBefore(moment().startOf("day"))) return ctx.reply("No puedo ver el pasado 😅");
+  if (date.isBefore(moment().startOf("day")))
+    return ctx.reply(
+      `No puedo ver el pasado 😅.\n\nEste fue el día que entendí: <code>${getDateDescription(date, true)}</code>`,
+      { parse_mode: "HTML" }
+    );
 
   sendMovies(date, [ctx.chat.id]);
 });

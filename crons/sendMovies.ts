@@ -3,22 +3,18 @@ import bot from "../telegram/initBot.ts";
 import getMovies from "../utils/getMovies.ts";
 import { subscribers } from "../constants.ts";
 import handleError from "../utils/handleError.ts";
+import getDateDescription from "../utils/getDateDescription.ts";
 import sendMessage, { sendHTMLMessage } from "../utils/sendMessage.ts";
 
 const picturesSent: Record<string, string> = {};
 
 export default async function sendMovies(date: Moment, sendTo = subscribers) {
-  date.locale("es");
-  const day = date.get("date");
-  const monthName = date.format("MMMM");
-  const dayName = date.format("dddd");
-
   const movies = await getMovies(date);
   const { length } = movies;
 
   for (const user of sendTo) {
     try {
-      await sendHTMLMessage(`Resultados del día <code>${dayName} ${day} de ${monthName}</code>`, user);
+      await sendHTMLMessage(`Resultados del día <code>${getDateDescription(date)}</code>`, user);
 
       if (length === 0) {
         await sendMessage("No hay películas disponibles.", user);
