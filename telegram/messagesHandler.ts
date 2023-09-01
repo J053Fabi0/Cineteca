@@ -2,6 +2,7 @@ import moment from "moment";
 import bot from "./initBot.ts";
 import { users } from "../constants.ts";
 import nlToDate from "../utils/nlToDate.ts";
+import sendMovies from "../crons/sendMovies.ts";
 
 bot.on("message", (ctx) => {
   (async () => {
@@ -19,11 +20,6 @@ bot.on("message", (ctx) => {
     if (!date) return incorrectText();
     if (date.isBefore(moment().startOf("day"))) return ctx.reply("No puedo ver el pasado 😅");
 
-    date.locale("es");
-    const day = date.get("date");
-    const monthName = date.format("MMMM");
-    const dayName = date.format("dddd");
-
-    await ctx.reply(`Resultados del día ${dayName} ${day} de ${monthName}`);
+    await sendMovies(date, [ctx.chat.id]);
   })();
 });
