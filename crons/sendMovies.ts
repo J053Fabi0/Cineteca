@@ -27,23 +27,25 @@ export default async function sendMovies(date: Moment, sendTo = subscribers) {
 
       for (let i = 0; i < length; i++) {
         const movie = movies[i];
-        // send the photo
-        if (movie.image) {
-          let caption = `${i + 1}/${length} <b>${movie.title}</b>\n\n`;
-          if (movie.description) caption += `${movie.description}\n\n`;
-          if (movie.schedules.length > 0) {
-            const schedulesText = movie.schedules.map((schedule) => schedule.format("h:mm A")).join(", ");
-            caption += `<b>Horario${movie.schedules.length === 1 ? "" : "s"}:</b> ${schedulesText}\n`;
-          }
-          if (movie.location) caption += `<b>Lugar:</b> ${movie.location}\n`;
-          if (movie.url) caption += `\n<a href="${movie.url}">Más información</a>`;
 
+        let caption = `${i + 1}/${length} <b>${movie.title}</b>\n\n`;
+        if (movie.description) caption += `${movie.description}\n\n`;
+        if (movie.schedules.length > 0) {
+          const schedulesText = movie.schedules.map((schedule) => schedule.format("h:mm A")).join(", ");
+          caption += `<b>Horario${movie.schedules.length === 1 ? "" : "s"}:</b> ${schedulesText}\n`;
+        }
+        if (movie.location) caption += `<b>Lugar:</b> ${movie.location}\n`;
+        if (movie.url) caption += `\n<a href="${movie.url}">Más información</a>`;
+
+        if (movie.image) {
           const { photo } = await bot.api.sendPhoto(user, picturesSent[movie.image] || movie.image, {
             caption,
             parse_mode: "HTML",
           });
 
           if (!picturesSent[movie.image]) picturesSent[movie.image] = photo[photo.length - 1].file_id;
+        } else {
+          await sendHTMLMessage(caption, user, { disable_web_page_preview: true });
         }
       }
     } catch (e) {

@@ -1,7 +1,7 @@
 import { Moment } from "moment";
 
 export default interface Movie {
-  title: string | undefined;
+  title: string;
   description: string | undefined;
   location: string | undefined;
   schedules: Moment[];
