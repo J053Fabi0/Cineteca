@@ -23,14 +23,28 @@ export default async function getMovies(
     const title = movieElement.querySelector(".title strong")?.textContent;
     const description = movieElement.querySelector(".title .kicker p")?.textContent;
     const location = movieElement.querySelector(".location p strong")?.textContent;
-    const schedule = movieElement.querySelector(".schedule_hours")?.textContent;
+    const schedulesText = movieElement.querySelector(".schedule_hours")?.textContent;
     const url = movieElement.querySelector("a.max_wrap")?.getAttribute("href") ?? undefined;
     const imageElement = movieElement.querySelector("img.attachment-medium.size-medium.wp-post-image");
     const image =
       imageElement?.getAttribute("srcset")?.split(" ")[0] ?? imageElement?.getAttribute("src") ?? undefined;
 
-    movies.push({ title, location, schedule, description, url, image });
+    // schedulesText has the format 17:00 h., 19:30 h., 21:00 h.
+
+    const schedules: Moment[] = [];
+    if (schedulesText) {
+      const schedulesTextSplitted = schedulesText.split(", ");
+      for (const scheduleText of schedulesTextSplitted) {
+        const scheduleMoment = moment(`${dateFormatted} ${scheduleText.replace(" h.", "")}`, "YYYYMMDD HH:mm");
+        schedules.push(scheduleMoment);
+      }
+    }
+
+    movies.push({ title, location, schedules, description, url, image });
   }
+
+  // sort by the first schedule
+  movies.sort((a, b) => a.schedules[0].diff(b.schedules[0]));
 
   return movies;
 }

@@ -26,7 +26,10 @@ export default async function sendMovies(date: Moment, sendTo = subscribers) {
         if (movie.image) {
           let caption = `${i + 1}/${length} <b>${movie.title}</b>\n\n`;
           if (movie.description) caption += `${movie.description}\n\n`;
-          if (movie.schedule) caption += `<b>Horario:</b> ${movie.schedule}\n`;
+          if (movie.schedules.length > 0) {
+            const schedulesText = movie.schedules.map((schedule) => schedule.format("h:mm A")).join(", ");
+            caption += `<b>Horario${movie.schedules.length === 1 ? "" : "s"}:</b> ${schedulesText}\n`;
+          }
           if (movie.location) caption += `<b>Lugar:</b> ${movie.location}\n`;
           if (movie.url) caption += `\n<a href="${movie.url}">Más información</a>`;
 
