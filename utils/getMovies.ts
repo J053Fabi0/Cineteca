@@ -21,6 +21,7 @@ export default async function getMovies(
 
   for (const movieElement of moviesElements) {
     const title = movieElement.querySelector(".title strong")?.textContent;
+    if (!title) continue;
     const description = movieElement.querySelector(".title .kicker p")?.textContent;
     const location = movieElement.querySelector(".location p strong")?.textContent;
     const schedulesText = movieElement.querySelector(".schedule_hours")?.textContent;
