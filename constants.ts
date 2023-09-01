@@ -4,6 +4,7 @@ import Constants from "./types/constants.type.ts";
 
 const constantsSchema = joi.object<Constants>({
   users: joi.array().items(joi.number()).required(),
+  subscribers: joi.array().items(joi.number()).required(),
   cron: joi.string().optional().default("0 */1 * * *"),
   timezone: joi.string().optional().default("America/Monterrey"),
 });
@@ -17,4 +18,7 @@ if (error || !constants) {
   Deno.exit(1);
 }
 
-export const { users, cron, timezone } = constants;
+export const { users, cron, timezone, subscribers } = constants;
+
+/** Both users and subscribers */
+export const allUsers = [...new Set([...users, ...constants.subscribers])];

@@ -1,13 +1,13 @@
 import { Moment } from "moment";
-import { users } from "../constants.ts";
 import bot from "../telegram/initBot.ts";
 import getMovies from "../utils/getMovies.ts";
+import { subscribers } from "../constants.ts";
 import handleError from "../utils/handleError.ts";
 import { sendHTMLMessage } from "../utils/sendMessage.ts";
 
 const picturesSent: Record<string, string> = {};
 
-export default async function sendMovies(date: Moment, sendTo = users) {
+export default async function sendMovies(date: Moment, sendTo = subscribers) {
   date.locale("es");
   const day = date.get("date");
   const monthName = date.format("MMMM");

@@ -1,6 +1,7 @@
 {
   // the userId of the users that will receive the notifications. Integers. Get them with @userinfobot.
   "users": [],
+  "subscribers": [],
   // every day at 12 PM
   "cron": "0 0 12 * * *",
   "timezone": "America/Monterrey"
