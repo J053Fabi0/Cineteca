@@ -4,7 +4,7 @@ import { allUsers } from "../constants.ts";
 import nlToDate from "../utils/nlToDate.ts";
 import sendMovies from "../crons/sendMovies.ts";
 
-const ejemplos = ["En dos días", "El siguiente sábado", "Hoy"];
+const ejemplos = ["En dos días", "Este sábado", "El siguiente sábado", "Hoy"];
 
 bot.on("message", (ctx) => {
   if (!allUsers.includes(ctx.chat.id)) return;
