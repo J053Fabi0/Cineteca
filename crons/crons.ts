@@ -1,8 +1,8 @@
-import Cron, { CronOptions } from "cron";
-import handleError from "../utils/handleError.ts";
-import { cron, timezone } from "../constants.ts";
-import sendMovies from "./sendMovies.ts";
 import moment from "moment";
+import Cron, { CronOptions } from "cron";
+import sendMovies from "./sendMovies.ts";
+import { cron, timezone } from "../constants.ts";
+import handleError from "../utils/handleError.ts";
 
 const options: CronOptions = { catch: handleError, timezone };
 
