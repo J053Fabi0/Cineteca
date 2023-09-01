@@ -1,5 +1,5 @@
-import bot from "../initBot.ts";
 import { users } from "../constants.ts";
+import bot from "../telegram/initBot.ts";
 
 const sendMessage = (
   message: string,
