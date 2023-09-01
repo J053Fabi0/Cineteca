@@ -6,4 +6,4 @@ import moment from "moment";
 
 const options: CronOptions = { catch: handleError, timezone };
 
-new Cron(cron, options, sendMovies.bind(null, moment().add(1, "day")));
+new Cron(cron, options, () => sendMovies(moment().add(1, "day")));
