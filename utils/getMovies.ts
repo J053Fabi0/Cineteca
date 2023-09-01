@@ -40,6 +40,7 @@ export default async function getMovies(
         schedules.push(scheduleMoment);
       }
     }
+    schedules.sort((a, b) => a.diff(b));
 
     movies.push({ title, location, schedules, description, url, image });
   }
@@ -47,5 +48,6 @@ export default async function getMovies(
   // sort by the first schedule
   movies.sort((a, b) => a.schedules[0].diff(b.schedules[0]));
 
-  return movies;
+  // filter movies that have already passed
+  return movies.filter((movie) => movie.schedules[0].isAfter(moment()));
 }
