@@ -3,11 +3,15 @@ import { timezone } from "../constants.ts";
 import Recognizers from "recognizers-text-suite";
 import DateTimeRecognizers from "recognizers-text-date-time";
 
-const modules = [Recognizers.Culture.English, Recognizers.Culture.Spanish].map((culture) =>
+const modules = [Recognizers.Culture.Spanish, Recognizers.Culture.English].map((culture) =>
   new DateTimeRecognizers.DateTimeRecognizer(culture).getDateTimeModel()
 );
 
-const utcOffsetDiff = Math.abs(moment().tz(timezone).utcOffset() * -1 - moment().utcOffset() * -1);
+// This has to be added
+const utcOffsetDiff = moment().tz(timezone).utcOffset() - moment().utcOffset();
+
+const dateRegex = /(\d{4})-(\d{2})-(\d{2})/;
+const timeRegex = /\d{2}:\d{2}:\d{2}/;
 
 /**
  * Parses a natural language string to a date.
@@ -16,20 +20,27 @@ const utcOffsetDiff = Math.abs(moment().tz(timezone).utcOffset() * -1 - moment()
 export default function nlToDate(nl: string): Moment | null {
   for (const timeModule of modules) {
     const result = timeModule.parse(nl)[0]?.resolution?.values[0].value;
+    // result can be 2023-11-27 03:00:00, just 2023-11-27, or just 03:00:00
+    // it can also be a number, which is how many seconds to subtract to the current time,
+    // but we don't care about that
 
-    if (result) {
-      const date = moment(result).tz(timezone).add(utcOffsetDiff, "minutes");
-
-      if (date.isValid())
-        // the result comes in the current timezone, so we need to convert it to UTC
-        return moment()
-          .tz(timezone)
-          .set({ year: date.year(), month: date.month(), date: date.date() })
-          .startOf("day");
-
-      // if the result is a number, it's how many seconds to add to the current time
-      if (!Number.isNaN(result)) return moment().tz(timezone).add(+result, "seconds");
+    const hasDate = dateRegex.exec(result);
+    if (!hasDate) {
+      if (timeRegex.test(result)) return moment().tz(timezone).startOf("day");
+      continue;
     }
+
+    const [year, month, date, hour, minute] = moment()
+      .format("YYYY M D H m")
+      .split(" ")
+      .map((x) => +x);
+
+    return moment()
+      .tz(timezone)
+      .set({ year, month: month - 1, date, hour, minute })
+      .add(utcOffsetDiff, "minutes")
+      .startOf("day");
   }
+
   return null;
 }
